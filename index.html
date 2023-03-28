@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paint on Web</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+    <style> 
+    body {
+        background-image: url("https://placeimg.com/1280/720/animals");
+        background-repeat: no-repeat;
+        background-size: cover;
+        color: white;
+        text-align: center;
+        font-family: 'Poppins', sans-serif;  
+    }
+    </style>
+</head>
+<body>
+    <main>
+        <div>
+            <p>Bienvenid@!<br>Paint on the web, es un sitio diseñado para niños que están comenzando a interactuar con el computador,<br>de tal manera que con el solo uso del mouse podrán interactuar, divertirse y hacer sus primeros trazos y dibujos.</p>
+
+            <p>Instrucciones:<br>
+            1. Con clic izquierdo sostenido haces un trazos<br>
+            2. Cambia de color haciendo un clic izquierdo sobre él.<br>
+            3. Clic derecho para borrar y comenzar de nuevo.</p>
+        </div>
+    </main>
+    <canvas width="1024" height="600"></canvas>
+<script>
+    var lienzo = document.querySelector('canvas');
+    var pincel = lienzo.getContext('2d');
+    pincel.fillStyle = "grey";
+    pincel.fillRect(0, 0, 1024, 600);
+
+        function drawSquare(x,y,color){
+            pincel.fillStyle = color;
+            pincel.fillRect(x,y,50,50);
+            pincel.strokeStyle = "black";
+            pincel.strokeRect(x,y,50,50);
+        }
+            drawSquare(0,0,"red");
+            drawSquare(50,0,"blue");
+            drawSquare(100,0,"green");
+
+    var defaultColor = "blue";
+    var canDraw = false;
+
+    function drawCircle(x,y,defaultColor) {
+
+        if(canDraw) {
+            pincel.fillStyle = defaultColor;
+            pincel.beginPath();
+            pincel.arc(x, y, 5, 0, 2 * Math.PI);
+            pincel.fill();
+        }
+
+    }
+
+    function ableDraw() {
+
+        canDraw = true;
+    }
+
+    function disableDraw() {
+
+        canDraw = false;
+    }
+
+
+    function noArea(enX, enY){
+        if((enX >= 0 && enX < 150) &&
+            (enY >= 0 && enY < 50)) {
+                return false;
+            }
+            else{
+                return true;
+            }
+    }
+
+        function catchMouseMove(evento){
+            var x = evento.pageX - lienzo.offsetLeft;
+            var y = evento.pageY - lienzo.offsetTop;
+
+            if(noArea(x,y)){
+                drawCircle(x,y,defaultColor);
+            }
+
+        }
+
+        function chooseColor(evento){
+            var x = evento.pageX - lienzo.offsetLeft;
+            var y = evento.pageY - lienzo.offsetTop;
+            if (y < 50){
+                if(x < 50){
+                    defaultColor = "red";
+                    console.log(defaultColor);
+                }
+                    else if (x > 50 && x < 100) {
+                        defaultColor = "blue";
+                        console.log(defaultColor);
+                    } 
+                        else if (x > 100 && x < 150) {
+                            defaultColor = "green";
+                            console.log(defaultColor);
+                        }
+            }
+
+        } 
+
+        function erase(){
+            pincel.clearRect(0,0,600,400);
+            pincel.fillStyle = "grey";
+            pincel.fillRect(0,0,600,400);
+            drawSquare(0,0,"red");
+            drawSquare(50,0,"blue");
+            drawSquare(100,0,"green");
+            defaultColor = "blue";
+            return false;
+    }
+
+
+    lienzo.onmousemove = catchMouseMove;
+
+    lienzo.onmousedown = ableDraw;
+
+    lienzo.onmouseup = disableDraw;
+
+    lienzo.onclick = chooseColor;
+
+    lienzo.oncontextmenu = erase;
+
+</script>
+</body>
+</html>
